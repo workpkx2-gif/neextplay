@@ -1,0 +1,8 @@
+{
+  "name": "NeextPlay - B2B Gaming Provider Platform v5",
+  "description": "Enterprise-grade B2B game provider platform featuring multi-tenant operator management, certified slot mathematics engine, immutable double-entry wallet ledger, game session API, live casino adapter, and developer SDK sandbox.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

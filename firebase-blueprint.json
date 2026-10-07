@@ -1,0 +1,116 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated user account for Company Admin or Developer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["COMPANY_ADMIN", "DEVELOPER"] },
+        "companyName": { "type": "string" },
+        "operatorId": { "type": "string" },
+        "status": { "type": "string", "enum": ["ACTIVE", "SUSPENDED"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "email", "name", "role", "status", "createdAt"]
+    },
+    "Operator": {
+      "title": "Operator",
+      "description": "B2B client operator tenant profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "email": { "type": "string" },
+        "country": { "type": "string" },
+        "status": { "type": "string", "enum": ["ACTIVE", "PENDING", "SUSPENDED", "BLOCKED"] },
+        "currency": { "type": "string" },
+        "totalGgr": { "type": "number" },
+        "totalTurnover": { "type": "number" },
+        "activePlayers": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "code", "status", "currency", "createdAt"]
+    },
+    "Player": {
+      "title": "Player",
+      "description": "Casino player account associated with operator",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "operatorId": { "type": "string" },
+        "externalPlayerId": { "type": "string" },
+        "username": { "type": "string" },
+        "currency": { "type": "string" },
+        "balance": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "operatorId", "username", "currency", "balance", "status"]
+    },
+    "LedgerEntry": {
+      "title": "LedgerEntry",
+      "description": "Immutable double-entry transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "operatorId": { "type": "string" },
+        "playerId": { "type": "string" },
+        "idempotencyKey": { "type": "string" },
+        "type": { "type": "string" },
+        "debit": { "type": "number" },
+        "credit": { "type": "number" },
+        "balanceAfter": { "type": "number" },
+        "currency": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "operatorId", "playerId", "idempotencyKey", "type", "balanceAfter", "currency", "timestamp"]
+    },
+    "GameRound": {
+      "title": "GameRound",
+      "description": "Immutable completed game round",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "operatorId": { "type": "string" },
+        "playerId": { "type": "string" },
+        "gameId": { "type": "string" },
+        "roundId": { "type": "string" },
+        "betAmount": { "type": "number" },
+        "winAmount": { "type": "number" },
+        "payoutMultiplier": { "type": "number" },
+        "currency": { "type": "string" },
+        "status": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "rngSeed": { "type": "string" }
+      },
+      "required": ["id", "operatorId", "playerId", "gameId", "roundId", "betAmount", "winAmount", "status", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Application user records"
+    },
+    "/operators/{operatorId}": {
+      "schema": { "$ref": "#/entities/Operator" },
+      "description": "Multi-tenant B2B operator entities"
+    },
+    "/players/{playerId}": {
+      "schema": { "$ref": "#/entities/Player" },
+      "description": "Operator player balances"
+    },
+    "/ledger/{ledgerId}": {
+      "schema": { "$ref": "#/entities/LedgerEntry" },
+      "description": "Immutable financial audit ledger"
+    },
+    "/game_rounds/{roundId}": {
+      "schema": { "$ref": "#/entities/GameRound" },
+      "description": "Game round history and provably fair hashes"
+    }
+  }
+}
